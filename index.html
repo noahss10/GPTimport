@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>W.E.B. — Bridge Works</title>
+    <meta name="description" content="West East Bridge — Clean landing page" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>html,body,#root{height:100%}body{margin:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useEffect, useRef, useState } = React;
+      const BG = "#FBF8F1";
+      const TEXT = "#474646";
+      const ACCENT = "#8FB1D0";
+      const ACCENT2 = "#384862";
+      const ACCENT_GOLD = "#D0A64F";
+      const LOGO_SRC = "./assets/WEB_logo_periods_smaller.jpg";
+
+      const links=[
+        {href:"#hero",label:"Who We Are"},
+        {href:"#overview",label:"Overview"},
+        {href:"#enquiries",label:"Get In Touch"}
+      ];
+
+      const hexToRgba=(hex,a=1)=>{
+        const h=hex.replace('#','');
+        const n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);
+        return `rgba(${(n>>16)&255}, ${(n>>8)&255}, ${n&255}, ${a})`;
+      };
+
+      const Section=({id,children,className=""}= {})=>(
+        <section id={id} className={`min-h-[calc(100vh-7rem)] snap-center flex items-center ${className}`}><div className="w-full max-w-6xl mx-auto px-6 sm:px-10" id={`section-${id}`}>{children}</div></section>
+      );
+
+      function Landing(){
+        const [logoOk,setLogoOk]=useState(true);
+        const [scrolled,setScrolled]=useState(false);
+        const scrollerRef=useRef(null);
+        useEffect(()=>{
+          const el=scrollerRef.current; if(!el) return;
+          const on=()=>setScrolled(el.scrollTop>8);
+          el.addEventListener('scroll',on);
+          return()=>el.removeEventListener('scroll',on);
+        },[]);
+
+        return (
+          <div className="min-h-screen antialiased relative overflow-hidden" style={{background:BG,color:TEXT}}>
+            <header className={`sticky top-0 z-40 ${scrolled?"backdrop-blur border-b":"bg-transparent"}`}
+                    style={scrolled?{background:hexToRgba(BG,.85),borderColor:hexToRgba(TEXT,.15)}:{}}>
+              <nav className="max-w-7xl mx-auto h-28 px-6 sm:px-10 flex items-center justify-between">
+                <a id="logo-area" href="#hero" className="font-semibold tracking-tight text-lg">
+                  {logoOk? <img id="WEB_LOGO" src={LOGO_SRC} alt="W.E.B. logo"
+                                 className="h-[96px] sm:h-[110px] md:h-[112px] w-auto select-none transition-opacity duration-200 hover:opacity-90"
+                                 onError={()=>setLogoOk(false)} /> : <span className="text-xl">W.E.B.</span>}
+                </a>
+                <div className="hidden md:flex items-center gap-8 text-[13px] uppercase tracking-[0.14em]">
+                  {links.map(l=>(<a key={l.href} href={l.href} className="hover:opacity-80 transition-opacity">{l.label}</a>))}
+                </div>
+              </nav>
+            </header>
+
+            <div id="page-scroller" ref={scrollerRef} className="snap-y snap-mandatory snap-always overflow-y-scroll h-[calc(100vh-7rem)] scroll-smooth">
+              <Section id="hero" className="text-center items-center justify-center">
+                <div id="hero-stack" className="w-full" style={{transform:"translateY(-32px)"}}>
+                  <h1 className="mt-3 text-[48px] sm:text-[80px] font-semibold leading-[1.05] tracking-tight">
+                    Bridges for <span style={{color:ACCENT2}} className="transition-colors duration-200">Music</span>
+                  </h1>
+                  <p className="mt-3 text-[20px] font-light tracking-tight" style={{color:hexToRgba(TEXT,.75)}}>
+                    Bringing the world closer, one show at a time.
+                  </p>
+                  <div className="mt-8 flex items-center justify-center gap-4">
+                    <a href="#overview" className="rounded-full px-5 py-2 font-medium" style={{color:TEXT,border:`1px solid ${hexToRgba(TEXT,.25)}`}}>Next</a>
+                    <a href="#enquiries" className="rounded-full px-5 py-2 text-white font-medium transition duration-200 hover:brightness-110 hover:shadow-md hover:-translate-y-0.5" style={{background:ACCENT}}>Enquire</a>
+                  </div>
+                </div>
+              </Section>
+
+              <Section id="overview">
+                <div className="max-w-3xl mx-auto space-y-10">
+                  <p id="para-mission-intro" className="mt-3 sm:mt-4 text-xl sm:text-[26px] font-semibold leading-7 tracking-tight text-center max-w-3xl mx-auto" style={{color:hexToRgba(ACCENT2,.95),lineHeight:"1.75"}}>
+                    <span style={{ color: ACCENT_GOLD }}>Our mission is simple and sincere:</span><br/>
+                    <span style={{ color: ACCENT2 }}>To support artists, deliver exceptional live experiences, and create abundant value for investors.</span>
+                  </p>
+                </div>
+              </Section>
+
+              <Section id="enquiries" className="text-center items-center">
+                <div className="w-full">
+                  <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight" style={{ color: TEXT }}>Enquiries</h2>
+                  <p className="mt-3" style={{ color: hexToRgba(TEXT, 0.85) }}>Booking@bridgeconcerts.com · +1 (000) 000-0000</p>
+                </div>
+              </Section>
+            </div>
+          </div>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById('root')).render(<Landing/>);
+    </script>
+  </body>
+</html>
